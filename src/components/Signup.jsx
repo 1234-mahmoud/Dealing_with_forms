@@ -1,11 +1,21 @@
+import { useState } from "react";
+
 export default function Signup() {
+  const [passwordsAreNotEqual, setPasswordAreNotEqual] = useState(false);
+
   function handleSubmit(event) {
     event.preventDefault();
     const fd = new FormData(event.target);
     //  fd.get('email') // get the input name that has the prop name = email
-    const acquisitionChannel = fd.getAll('acquisition')
+    const acquisitionChannel = fd.getAll("acquisition");
     const data = Object.fromEntries(fd.entries()); //collect all form inputs entries
-    data.acquisition = acquisitionChannel // print all values as array of selected checkboxes
+    data.acquisition = acquisitionChannel; // print all values as array of selected checkboxes
+
+    if (data.password !== data["confirm-password"]) {
+      setPasswordAreNotEqual(true);
+      return;
+    }
+
     console.log(data);
   }
 
@@ -31,7 +41,11 @@ export default function Signup() {
             id="confirm-password"
             type="password"
             name="confirm-password"
+            
           />
+          <div className="control-error">{
+            passwordsAreNotEqual && <p>Passwords must match</p>
+            }</div>
         </div>
       </div>
 
