@@ -11,41 +11,29 @@ export default function Login() {
     password: "",
   });
 
+  const [didEdit, setDidEdit] = useState({
+    email: false,
+    password: false,
+  });
+
+  const emailIsInvalid = didEdit.email && !enteredValues.email.includes("@");
+
   function handleInputChange(identifier, value) {
     setEnteredValues((prevVal) => ({
       ...prevVal,
       [identifier]: value,
+    }));
 
-      /**
-       What does [identifier]: value mean?
-This syntax is called a computed property name in JavaScript. 
-It allows you to dynamically 
-set the key of an object based on the value of a variable.
+    setDidEdit((prevEdit) => ({
+      ...prevEdit,
+      [identifier]: false,
+    }));
+  }
 
-------------------------------------example--------------------------
- Example:
-js
-Copy
-Edit
-const identifier = "email";
-const value = "user@example.com";
-
-const obj = {
-  [identifier]: value
-};
-
-console.log(obj); // Output: { email: "user@example.com" }
-Without the square brackets, it would be interpreted as a literal key name:
-
-js
-Copy
-Edit
-const obj = {
-  identifier: value
-};
-
-console.log(obj); // Output: { identifier: "user@example.com" } ❌ Not what we want
-       */
+  function handleInputBlur(identifier) {
+    setDidEdit((prevEdit) => ({
+      ...prevEdit,
+      [identifier]: true,
     }));
   }
 
@@ -60,9 +48,13 @@ console.log(obj); // Output: { identifier: "user@example.com" } ❌ Not what we 
             id="email"
             type="email"
             name="email"
+            onBlur={() => handleInputBlur("email")}
             value={enteredValues.email}
             onChange={(event) => handleInputChange("email", event.target.value)}
           />
+          <div className="control-error">
+            {emailIsInvalid && <p>Please enter a valid email address.</p>}
+          </div>
         </div>
 
         <div className="control no-margin">
@@ -94,3 +86,34 @@ console.log(obj); // Output: { identifier: "user@example.com" } ❌ Not what we 
     </form>
   );
 }
+
+/**
+             What does [identifier]: value mean?
+      This syntax is called a computed property name in JavaScript. 
+      It allows you to dynamically 
+      set the key of an object based on the value of a variable.
+      
+      ------------------------------------example--------------------------
+       Example:
+      js
+      Copy
+      Edit
+      const identifier = "email";
+      const value = "user@example.com";
+      
+      const obj = {
+        [identifier]: value
+      };
+      
+      console.log(obj); // Output: { email: "user@example.com" }
+      Without the square brackets, it would be interpreted as a literal key name:
+      
+      js
+      Copy
+      Edit
+      const obj = {
+        identifier: value
+      };
+      
+      console.log(obj); // Output: { identifier: "user@example.com" } ❌ Not what we want
+             */
